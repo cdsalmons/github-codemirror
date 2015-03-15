@@ -26,7 +26,7 @@ This replaces the default GitHub Issue textarea with a [CodeMirror running in GF
 	git checkout 000000-dev
 	```
 
-- Now open Chrome and go to: `chrome://extensions/`.
+- Now open [Google Chrome](http://www.google.com/chrome/) and go to: `chrome://extensions/`.
 - Check the "Developer Mode" box on the top right-hand side of your screen.
 - Click the **Load Unpacked Extension** button at the top of your screen.
 - Choose the `github-codemirror` folder and you're set.
