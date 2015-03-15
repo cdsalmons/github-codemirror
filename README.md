@@ -40,3 +40,12 @@ The default theme is `ambiance` for CodeMirror. However, there are [other themes
 - Open the JavaScript Console in Google Chrome.
 - Type: `localStorage.setItem('githubCodemirror_cmTheme', 'ambiance');`. Change `ambiance` to [a theme](http://codemirror.net/demo/theme.html) that you prefer. Press "Enter" to run the command.
 - Reload GitHub.com and now you should have the theme that you prefer.
+
+### Making FilePicker.io a Little Cooler
+
+If your browser settings block 3rd-party cookies, then by default FilePicker.io will open a new popup window instead of being presented as a modal dialog overlay. If you'd like to get the most out of FilePicker.io, please follow these instructions carefully:
+
+- In Google Chrome, go to: `chrome://settings/contentExceptions#cookies`.
+- Add `[*.]filepicker.io` to your list of exceptions there.
+
+<img src="images/fpss.png" align="center" />
