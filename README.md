@@ -2,7 +2,7 @@
 
 <img src="images/icon-128.png" width="128" align="right" />
 
-This replaces the default GitHub Issue textarea (for a New Issue or Comments); with a [CodeMirror running in GFM mixed mode](http://codemirror.net/mode/gfm/).
+This replaces the default GitHub Issue textarea with a [CodeMirror running in GFM mixed mode](http://codemirror.net/mode/gfm/). This works for a New Issue and for Comments on an existing Issue.
 
 ### GitHub CodeMirror Features
 
@@ -26,8 +26,8 @@ This replaces the default GitHub Issue textarea (for a New Issue or Comments); w
 	git checkout 000000-dev
 	```
 
-- Now open Chrome and go to: `chrome://extensions/`
-- Check the "Developer Mode" box at the top right-hand side.
+- Now open Chrome and go to: `chrome://extensions/`.
+- Check the "Developer Mode" box on the top right-hand side of your screen.
 - Click the **Load Unpacked Extension** button at the top of your screen.
 - Choose the `github-codemirror` folder and you're set.
 - Now just reload the GitHub web interface.
