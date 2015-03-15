@@ -1,0 +1,55 @@
+.CodeMirror-fullscreen
+{
+	z-index : 10000;
+}
+.CodeMirror-fullscreen .CodeMirror-scroll
+{
+	padding : 1em;
+}
+.github-codemirror-fs-toggle,
+.github-codemirror-fs-upload-files
+{
+	top      : 1em;
+	right    : 1em;
+	z-index  : 10001;
+	position : fixed;
+
+	display  : none;
+	color    : #C0C0C0;
+	cursor   : pointer;
+}
+.github-codemirror-fs-upload-files
+{
+	right : 3em;
+}
+.github-codemirror-fs-toggle:hover,
+.github-codemirror-fs-upload-files:hover
+{
+	color : #FFFFFF;
+}
+.github-codemirror-upload-files
+{
+	margin                     : 0;
+	padding                    : 7px 10px;
+
+	font-size                  : 13px;
+	line-height                : 16px;
+
+	color                      : #AAAAAA;
+	background-color           : #FAFAFA;
+	border                     : 1px solid #CCCCCC;
+
+	border-top                 : 0;
+	border-bottom-right-radius : 3px;
+	border-bottom-left-radius  : 3px;
+}
+.github-codemirror-upload-files > a
+{
+	text-decoration : none;
+}
+.cm-s-ambiance .cm-header
+{
+	font-size   : 120% !important;
+	color       : #EEEEEE !important;
+	font-weight : normal !important;
+}
