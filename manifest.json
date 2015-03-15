@@ -27,8 +27,8 @@
 			],
 			"js"     : [
 				"scripts/jquery-2.1.3.min.js",
-				"scripts/codemirror/keymap/emacs.js",
 				"scripts/codemirror/lib/codemirror.js",
+				"scripts/codemirror/keymap/emacs.js",
 				"scripts/codemirror/addon/mode/overlay.js",
 				"scripts/codemirror/addon/display/fullscreen.js",
 				"scripts/codemirror/addon/edit/matchbrackets.js",
