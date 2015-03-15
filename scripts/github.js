@@ -35,6 +35,7 @@
 				matchBrackets : true,
 				indentWithTabs: true,
 				mode          : 'gfm',
+				keyMap        : 'emacs',
 				theme         : getOption('cmTheme', 'ambiance'),
 				extraKeys     : {
 					'F11': function(cm)
