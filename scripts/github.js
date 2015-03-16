@@ -142,6 +142,11 @@
 					           codeClearInterval = setInterval(codeClearIntervalHandler, 100);
 				           }, 500);
 			});
+			$comment.find('.timeline-comment-action.js-comment-edit-button').on('click.githubCodemirror', function()
+			{
+				setTimeout(function() // Sync w/ textarea and refresh editor.
+				           { cm.setValue($(cm.getTextArea()).val()), cm.refresh(); }, 100);
+			});
 			$this.closest('form[action*="/commit_comment/"]').find('.form-actions button[type="submit"]')
 				.each(function() // Enable commit comment submit button; if applicable.
 				      {
@@ -153,15 +158,16 @@
 						      };
 					      cm.on('keydown', eventHandler);
 				      });
-			$('.sidebar-labels .js-menu-target').off('.githubCodemirror').on('click.githubCodemirror', function(e)
-			{
-				$('.comment-form-textarea').each(function()
-				                                 {
-					                                 var $this = $(this), // Initialize.
-						                                 cm = $this.data('githubCodemirror');
-					                                 if(cm) cm.save(); // Update code mirror.
-				                                 });
-			});
+			if(/\/issues\/new(?:[\/?&#]|$)/i.test(location.href)) // Support the `.wskby` shortcut in Typinator.
+				$('.sidebar-labels .js-menu-target').off('.githubCodemirror').on('click.githubCodemirror', function(e)
+				{
+					$('.comment-form-textarea').each(function()
+					                                 {
+						                                 var $this = $(this), // Initialize.
+							                                 cm = $this.data('githubCodemirror');
+						                                 if(cm) cm.save(); // Update code mirror.
+					                                 });
+				});
 		};
 		var uploadTo = function(cm)
 		{
