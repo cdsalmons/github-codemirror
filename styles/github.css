@@ -53,3 +53,17 @@
 	color       : #EEEEEE !important;
 	font-weight : normal !important;
 }
+.cm-s-ambiance .cm-comment
+{
+	color      : #AEAEAE !important;
+	font-style : normal !important;
+}
+.CodeMirror-placeholder
+{
+	opacity    : 0.5;
+	font-style : italic;
+}
+.CodeMirror-placeholder::after
+{
+	content : '...';
+}

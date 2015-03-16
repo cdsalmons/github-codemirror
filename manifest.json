@@ -22,26 +22,54 @@
 			],
 			"css"    : [
 				"scripts/codemirror/lib/codemirror.css",
+
+				"scripts/codemirror/addon/dialog/dialog.css",
+				"scripts/codemirror/addon/search/matchesonscrollbar.css",
 				"scripts/codemirror/addon/display/fullscreen.css",
+
 				"styles/github.css"
 			],
 			"js"     : [
 				"scripts/jquery-2.1.3.min.js",
 				"scripts/codemirror/lib/codemirror.js",
+
 				"scripts/codemirror/addon/mode/overlay.js",
+				"scripts/codemirror/addon/dialog/dialog.js",
+				"scripts/codemirror/addon/search/searchcursor.js",
+				"scripts/codemirror/addon/search/search.js",
+				"scripts/codemirror/addon/scroll/annotatescrollbar.js",
+				"scripts/codemirror/addon/search/matchesonscrollbar.js",
 				"scripts/codemirror/addon/display/fullscreen.js",
 				"scripts/codemirror/addon/edit/matchbrackets.js",
+				"scripts/codemirror/addon/edit/continuelist.js",
+				"scripts/codemirror/addon/display/placeholder.js",
+
+				"scripts/codemirror/mode/clike/clike.js",
 				"scripts/codemirror/mode/htmlmixed/htmlmixed.js",
 				"scripts/codemirror/mode/markdown/markdown.js",
 				"scripts/codemirror/mode/gfm/gfm.js",
+				"scripts/codemirror/mode/dtd/dtd.js",
 				"scripts/codemirror/mode/xml/xml.js",
-				"scripts/codemirror/mode/javascript/javascript.js",
 				"scripts/codemirror/mode/css/css.js",
-				"scripts/codemirror/mode/clike/clike.js",
-				"scripts/codemirror/mode/php/php.js",
+				"scripts/codemirror/mode/sass/sass.js",
 				"scripts/codemirror/mode/yaml/yaml.js",
+				"scripts/codemirror/mode/haml/haml.js",
+				"scripts/codemirror/mode/properties/properties.js",
+				"scripts/codemirror/mode/javascript/javascript.js",
+				"scripts/codemirror/mode/coffeescript/coffeescript.js",
+				"scripts/codemirror/mode/python/python.js",
+				"scripts/codemirror/mode/ruby/ruby.js",
+				"scripts/codemirror/mode/clojure/clojure.js",
+				"scripts/codemirror/mode/django/django.js",
+				"scripts/codemirror/mode/perl/perl.js",
+				"scripts/codemirror/mode/php/php.js",
+				"scripts/codemirror/mode/sql/sql.js",
+				"scripts/codemirror/mode/shell/shell.js",
+				"scripts/codemirror/mode/nginx/nginx.js",
+				"scripts/codemirror/mode/lua/lua.js",
+				"scripts/codemirror/mode/go/go.js",
 				"scripts/codemirror/mode/meta.js",
-				"scripts/codemirror/keymap/emacs.js",
+
 				"scripts/filepicker.js",
 				"scripts/github.js"
 			]

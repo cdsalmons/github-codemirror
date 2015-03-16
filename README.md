@@ -8,7 +8,8 @@ This replaces the default GitHub Issue textarea with a [CodeMirror running in GF
 
 - Full-featured code editor operating in [GFM mixed mode](http://codemirror.net/mode/gfm/).
 - Syntax highlighting for fenced code blocks that include a language specifier.
-- [Emacs-style shortcuts](http://codemirror.net/demo/emacs.html) for text editing and for code samples.
+- [Keyboard shortcuts](http://codemirror.net/doc/manual.html#commands) for text editing commands.
+- [Search/replace](http://codemirror.net/demo/search.html) functionality (including regex).
 - The ability to use the Tab key, or Shift-Tab (powered by CodeMirror).
 - Supports the `R` key shortcut at GitHub; for quick replies to existing Issues.
 - Supports a true fullscreen editing mode. Use `F11` to toggle or click the fullscreen link.

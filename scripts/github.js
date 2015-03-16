@@ -35,10 +35,10 @@
 				matchBrackets : true,
 				indentWithTabs: true,
 				mode          : 'gfm',
-				keyMap        : 'emacs',
+				keyMap        : 'default',
 				theme         : getOption('cmTheme', 'ambiance'),
 				extraKeys     : {
-					'F11': function(cm)
+					'F11'  : function(cm)
 					{
 						var isFullScreen = cm.getOption('fullScreen');
 						cm.setOption('fullScreen', !isFullScreen);
@@ -67,7 +67,8 @@
 
 								uploadTo(cm); // Perform the upload.
 							});
-					}
+					},
+					'Enter': 'newlineAndIndentContinueMarkdownList'
 				}
 			}, // CodeMirror options.
 			cmThemeURL = chrome.extension.getURL('scripts/codemirror/theme/' + cmOptions.theme + '.css');
@@ -141,6 +142,17 @@
 					           codeClearInterval = setInterval(codeClearIntervalHandler, 100);
 				           }, 500);
 			});
+			$this.closest('form[action*="/commit_comment/"]').find('.form-actions button[type="submit"]')
+				.each(function() // Enable commit comment submit button; if applicable.
+				      {
+					      var $this = $(this),
+						      eventHandler = function()
+						      {
+							      $this.removeAttr('disabled'),
+								      cm.off('keydown', eventHandler);
+						      };
+					      cm.on('keydown', eventHandler);
+				      });
 			$('.sidebar-labels .js-menu-target').off('.githubCodemirror').on('click.githubCodemirror', function(e)
 			{
 				$('.comment-form-textarea').each(function()
