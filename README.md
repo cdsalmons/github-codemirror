@@ -39,7 +39,7 @@ The default theme is `ambiance` for CodeMirror. However, there are [other themes
 
 - Visit GitHub.com in Google Chrome.
 - Open the JavaScript Console in Google Chrome.
-- Type: `localStorage.setItem('githubCodemirror_cmTheme', 'ambiance');`. Change `ambiance` to [a theme](http://codemirror.net/demo/theme.html) that you prefer. Press "Enter" to run the command.
+- Type: `localStorage.setItem('githubCodeMirror_cmTheme', 'ambiance');`. Change `ambiance` to [a theme](http://codemirror.net/demo/theme.html) that you prefer. Press "Enter" to run the command.
 - Reload GitHub.com and now you should have the theme that you prefer.
 
 ### Making FilePicker.io a Little Cooler

@@ -1,0 +1,47 @@
+@import url('font-awesome/css/font-awesome.css');
+/**/
+.options .option
+{
+	margin : 1em 0 1em 0;
+}
+.options .option:first-child
+{
+	margin-top : 0;
+}
+.options .option:last-child
+{
+	margin-bottom : 0;
+}
+.options .option input[type='text'],
+.options .option input[type='password'],
+.options .option input[type='email'],
+.options .option input[type='url'],
+.options .option select, .option textarea,
+.options .option button.save
+{
+	width      : 100%;
+	box-sizing : border-box;
+}
+.options .option label + p
+{
+	margin      : 0;
+	font-size   : 90%;
+	opacity     : 0.6;
+	font-style  : italic;
+	line-height : 1.2em;
+}
+.options .save-status
+{
+	display       : none;
+
+	padding       : .5em;
+	border-radius : .35em;
+	margin        : 0 0 1em 0;
+	background    : #266C32;
+	color         : #FFFFFF;
+	text-align    : center;
+}
+.options .save
+{
+	font-weight : bold;
+}

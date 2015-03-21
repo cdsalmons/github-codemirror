@@ -1,11 +1,6 @@
-.CodeMirror-fullscreen
-{
-	z-index : 10000;
-}
-.CodeMirror-fullscreen .CodeMirror-scroll
-{
-	padding : 1em;
-}
+/*
+Fullscreen styles.
+*/
 .github-codemirror-fs-toggle,
 .github-codemirror-fs-upload-files
 {
@@ -27,6 +22,14 @@
 {
 	color : #FFFFFF;
 }
+.github-codemirror-fs-upload-files > i.octicon-sync
+{
+	-webkit-animation : github-codemirror-spin 2s infinite linear;
+	animation         : github-codemirror-spin 2s infinite linear;
+}
+/*
+File upload styles.
+*/
 .github-codemirror-upload-files
 {
 	margin                     : 0;
@@ -43,10 +46,29 @@
 	border-bottom-right-radius : 3px;
 	border-bottom-left-radius  : 3px;
 }
+.github-codemirror-upload-files > input,
+.github-codemirror-upload-files > .-progress
+{
+	display : none;
+}
+.github-codemirror-upload-files > .-drag-n-drop,
+.github-codemirror-upload-files > .-progress
+{
+	float  : right;
+	margin : 0 0 0 1em;
+}
+.github-codemirror-upload-files > .-progress > .octicon-sync
+{
+	-webkit-animation : github-codemirror-spin 2s infinite linear;
+	animation         : github-codemirror-spin 2s infinite linear;
+}
 .github-codemirror-upload-files > a
 {
 	text-decoration : none;
 }
+/*
+CodeMirror styles.
+*/
 .cm-s-ambiance .cm-header
 {
 	font-size   : 120% !important;
@@ -66,4 +88,41 @@
 .CodeMirror-placeholder::after
 {
 	content : '...';
+}
+.CodeMirror-fullscreen
+{
+	z-index : 10000;
+}
+.CodeMirror-fullscreen .CodeMirror-scroll
+{
+	padding : 1em;
+}
+/*
+Animations.
+*/
+@-webkit-keyframes github-codemirror-spin
+{
+	0%
+	{
+		-webkit-transform : rotate(0deg);
+		transform         : rotate(0deg);
+	}
+	100%
+	{
+		-webkit-transform : rotate(359deg);
+		transform         : rotate(359deg);
+	}
+}
+@keyframes github-codemirror-spin
+{
+	0%
+	{
+		-webkit-transform : rotate(0deg);
+		transform         : rotate(0deg);
+	}
+	100%
+	{
+		-webkit-transform : rotate(359deg);
+		transform         : rotate(359deg);
+	}
 }

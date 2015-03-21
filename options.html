@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>GitHub CodeMirror Options</title>
+	<style type="text/css">
+		@import url('styles/options.css');
+	</style>
+	<script type="text/javascript" src="scripts/jquery.js"></script>
+	<script type="text/javascript" src="scripts/options.js"></script>
+</head>
+<body class="options">
+<form onsubmit="return false;" novalidate>
+	<div class="option">
+		<div>
+			<label for="cmTheme">
+				CodeMirror Theme:
+			</label>
+		</div>
+		<select id="cmTheme">
+			<option value="3024-day">3024-day</option>
+			<option value="3024-night">3024-night</option>
+			<option value="ambiance-mobile">ambiance-mobile</option>
+			<option value="ambiance">ambiance</option>
+			<option value="base16-dark">base16-dark</option>
+			<option value="base16-light">base16-light</option>
+			<option value="blackboard">blackboard</option>
+			<option value="cobalt">cobalt</option>
+			<option value="colorforth">colorforth</option>
+			<option value="eclipse">eclipse</option>
+			<option value="elegant">elegant</option>
+			<option value="erlang-dark">erlang-dark</option>
+			<option value="lesser-dark">lesser-dark</option>
+			<option value="mbo">mbo</option>
+			<option value="mdn-like">mdn-like</option>
+			<option value="midnight">midnight</option>
+			<option value="monokai">monokai</option>
+			<option value="neat">neat</option>
+			<option value="neo">neo</option>
+			<option value="night">night</option>
+			<option value="paraiso-dark">paraiso-dark</option>
+			<option value="paraiso-light">paraiso-light</option>
+			<option value="pastel-on-dark">pastel-on-dark</option>
+			<option value="rubyblue">rubyblue</option>
+			<option value="solarized">solarized</option>
+			<option value="the-matrix">the-matrix</option>
+			<option value="tomorrow-night-bright">tomorrow-night-bright</option>
+			<option value="tomorrow-night-eighties">tomorrow-night-eighties</option>
+			<option value="twilight">twilight</option>
+			<option value="vibrant-ink">vibrant-ink</option>
+			<option value="xq-dark">xq-dark</option>
+			<option value="xq-light">xq-light</option>
+			<option value="zenburn">zenburn</option>
+		</select>
+	</div>
+	<hr />
+	<div class="option">
+		<div>
+			<label for="filePickerKey">
+				FilePicker.io API Key:
+			</label>
+			<p>
+				Please <a href="https://developers.filepicker.io/apps/" target="_blank">create a personal App at FilePicker.io</a> to obtain a key.
+			</p>
+		</div>
+		<input type="password" id="filePickerKey" />
+	</div>
+	<div class="option">
+		<div>
+			<label for="filePickerFancy">
+				Use Fancy FilePicker.io Dialog?
+			</label>
+			<p>Only enable this if you intend to upload files from sources other than your own computer. Enabling the fancy FilePicker.io dialog makes it possible to upload files that are stored in the Cloud; e.g., Facebook, Dropbox, Google Drive, etc. However, the fancy interface it is also slightly slower.</p>
+		</div>
+		<select id="filePickerFancy">
+			<option value="">false</option>
+			<option value="true">true</option>
+		</select>
+	</div>
+	<hr />
+	<div class="option">
+		<div>
+			<label for="autoFsEditRegex">
+				Automatic Fullscreen Editing Pattern:
+			</label>
+			<p>
+				This is entered as a <a href="http://www.regular-expressions.info/" target="_blank">regular expression pattern</a> that matches the current GitHub URL. If the pattern finds a match; clicking a GitHub pencil icon (to edit an existing GitHub Issue) puts you into fullscreen editing mode automatically. Note that regex delimiters are not necessary here.
+			</p>
+		</div>
+		<input type="text" id="autoFsEditRegex" placeholder="Example: \/johndoe22\/(?:test\-repo|.*?\-kb)\/" />
+	</div>
+	<hr />
+	<div class="option">
+		<div class="save-status">
+			<i class="fa fa-check-circle"></i>
+			Options saved successfully.
+		</div>
+		<button type="button" class="save">
+			Save Options <i class="fa fa-save"></i>
+		</button>
+	</div>
+</form>
+</body>
+</html>

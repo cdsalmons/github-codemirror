@@ -2,7 +2,24 @@
 {
 	'use strict'; // Standards.
 
-	var onReady = function() // On DOM ready state.
+	var chromeOptions = {}, onReady = function()
+	{
+		chrome.storage.sync.get(
+			{
+				cmTheme: 'ambiance',
+
+				filePickerKey  : '',
+				filePickerFancy: '',
+
+				autoFsEditRegex: ''
+
+			}, function(options)
+			{
+				chromeOptions = options,
+					onOptionsReady();
+			});
+	};
+	var onOptionsReady = function() // On DOM ready state.
 	{
 		var fsToggle = // Fullscreen toggler.
 				'<div class="github-codemirror-fs-toggle" title="F11 (Fullscreen Toggle)">' +
@@ -16,81 +33,28 @@
 
 			uploadFiles = // File uploader.
 				'<div class="github-codemirror-upload-files" title="FilePicker.io">' +
+				'  <input type="file" multiple="multiple" />' + // Hidden via CSS.
+				'  <div class="-drag-n-drop">Or drag n\' drop <i class="octicon octicon-cloud-upload"></i></div>' +
+				'  <div class="-progress"><i class="octicon octicon-sync"></i> Uploading...</div>' + // Hidden via CSS.
 				'  <i class="octicon octicon-cloud-upload"></i> <a href="#">Upload Files</a> (of any type) — powered by FilePicker.io' +
 				'</div>',
 
 			getOption = function(option, defaultValue)
 			{
-				var value = localStorage.getItem('githubCodemirror_' + option);
-				return value !== null ? value : defaultValue;
+				var value = chromeOptions.hasOwnProperty(option)
+					? chromeOptions[option] : undefined; // Default value.
+				return value !== undefined && value !== null ? value : defaultValue;
 			},
 			updateOption = function(option, value)
 			{
-				localStorage.setItem('githubCodemirror_' + option, value);
+				var update = {}; // The option we are saving.
+				update[option] = value, chrome.storage.sync.set(update),
+					chromeOptions[option] = value; // Update value.
 			},
-			cmOptions = {
-				tabSize       : 3,
-				lineWrapping  : true,
-				lineNumbers   : false,
-				matchBrackets : true,
-				indentWithTabs: true,
-				mode          : 'gfm',
-				keyMap        : 'default',
-				theme         : getOption('cmTheme', 'ambiance'),
-				extraKeys     : {
-					'F11'  : function(cm)
-					{
-						var isFullScreen = cm.getOption('fullScreen');
-						cm.setOption('fullScreen', !isFullScreen);
-
-						if(!$('.github-codemirror-fs-toggle').length)
-							$('body').append($(fsToggle));
-
-						if(!$('.github-codemirror-fs-upload-files').length)
-							$('body').append($(fsUploadFiles));
-
-						if(isFullScreen) // Toggle off?
-							$('.github-codemirror-fs-toggle').off('.githubCodemirror').hide(),
-								$('.github-codemirror-fs-upload-files').off('.githubCodemirror').hide();
-
-						else $('.github-codemirror-fs-toggle').off('.githubCodemirror').show().on('click.githubCodemirror', function(e)
-						{
-							e.preventDefault(),
-								e.stopImmediatePropagation();
-
-							cm.setOption('fullScreen', false), $(this).off('.githubCodemirror').hide();
-						}),
-							$('.github-codemirror-fs-upload-files').off('.githubCodemirror').show().on('click.githubCodemirror', function(e)
-							{
-								e.preventDefault(),
-									e.stopImmediatePropagation();
-
-								uploadTo(cm); // Perform the upload.
-							});
-					},
-					'Enter': 'newlineAndIndentContinueMarkdownList'
-				}
-			}, // CodeMirror options.
-			cmThemeURL = chrome.extension.getURL('scripts/codemirror/theme/' + cmOptions.theme + '.css');
-
-		var convert = function() // Textarea.
-		{
-			var $this = $(this), cm, $uploadFiles, // Initialize.
-				$comment = $this.closest('.timeline-comment-wrapper');
-
-			if($this.data('githubCodemirror'))
-				return; // Already did this.
-
-			cm = CodeMirror.fromTextArea(this, cmOptions),
-				$this.data('githubCodemirror', cm); // Reference.
-
-			$comment.find('.comment-form-head .preview-tab').on('click.githubCodemirror', cm.save);
-			$comment.find('.comment-form-head .enable-fullscreen').on('click.githubCodemirror', function(e)
+			toggleFullscreen = function(cm)
 			{
-				e.preventDefault(),
-					e.stopImmediatePropagation();
-
-				cm.setOption('fullScreen', true);
+				var isFullScreen = cm.getOption('fullScreen');
+				cm.setOption('fullScreen', !isFullScreen);
 
 				if(!$('.github-codemirror-fs-toggle').length)
 					$('body').append($(fsToggle));
@@ -98,32 +62,115 @@
 				if(!$('.github-codemirror-fs-upload-files').length)
 					$('body').append($(fsUploadFiles));
 
-				$('.github-codemirror-fs-toggle').off('.githubCodemirror').show().on('click.githubCodemirror', function(e)
+				if(isFullScreen) // Toggle fullscreen off?
+				{
+					$('.github-codemirror-fs-toggle').off('.githubCodeMirror').hide(),
+						$('.github-codemirror-fs-upload-files').off('.githubCodeMirror').hide();
+					return; // All done in this scenario.
+				}
+				// Else toggle fullscreen on and setup event handlers.
+
+				$('.github-codemirror-fs-toggle').off('.githubCodeMirror').show().on('click.githubCodeMirror', function(e)
 				{
 					e.preventDefault(),
 						e.stopImmediatePropagation();
-
-					cm.setOption('fullScreen', false),
-						$(this).off('.githubCodemirror').hide(),
-						$('.github-codemirror-fs-upload-files').off('.githubCodemirror').hide();
+					cm.setOption('fullScreen', false), $(this).off('.githubCodeMirror').hide();
 				});
-				$('.github-codemirror-fs-upload-files').off('.githubCodemirror').show().on('click.githubCodemirror', function(e)
+				$('.github-codemirror-fs-upload-files').off('.githubCodeMirror').show().on('click.githubCodeMirror', function(e)
 				{
 					e.preventDefault(),
 						e.stopImmediatePropagation();
-
 					uploadTo(cm); // Perform the upload.
 				});
+			},
+			cmOptions = {
+				tabSize       : 3,
+				dragDrop      : false,
+				lineWrapping  : true,
+				lineNumbers   : false,
+				matchBrackets : true,
+				indentWithTabs: true,
+				mode          : 'gfm',
+				keyMap        : 'default',
+				theme         : getOption('cmTheme'),
+				extraKeys     : {
+					'F11'  : toggleFullscreen,
+					'Enter': 'newlineAndIndentContinueMarkdownList'
+				}
+			}, // CodeMirror options.
+			cmThemeURL = chrome.extension.getURL('scripts/codemirror/theme/' + cmOptions.theme + '.css');
+
+		var convert = function() // Textarea.
+		{
+			var $this = $(this), cm, $uploadFiles, uploadFilesInProgress,
+				$comment = $this.closest('.timeline-comment-wrapper');
+
+			if($this.data('githubCodeMirror') || $comment.find('.CodeMirror').length)
+				return; // Already has a CodeMirror instance.
+
+			cm = CodeMirror.fromTextArea(this, cmOptions),
+				$this.data('githubCodeMirror', cm); // Reference.
+
+			$comment.find('.comment-form-head .preview-tab').on('click.githubCodeMirror', cm.save);
+			$comment.find('.comment-form-head .enable-fullscreen').on('click.githubCodeMirror', function(e)
+			{
+				e.preventDefault(),
+					e.stopImmediatePropagation();
+				toggleFullscreen(cm); // Toggle fullscreen.
 			});
 			$comment.find('.drag-and-drop').replaceWith($uploadFiles = $(uploadFiles)),
-				$uploadFiles.find('> a').on('click.githubCodemirror', function(e)
+				filepicker.makeDropPane($comment.find('.CodeMirror')[0], { // Drag n' drop.
+					multiple  : true, // Allow for multiple files.
+					onSuccess : function(droppedFiles)
+					{
+						uploadTo(cm, droppedFiles), // Handle files.
+							uploadFilesInProgress = false;
+					},
+					onError   : function(type, message)
+					{
+						uploadProgressHide(cm), // Hide progress.
+							uploadFilesInProgress = false;
+					},
+					onProgress: function(percentage)
+					{
+						if(uploadFilesInProgress)
+							return; // Already in progress.
+
+						uploadProgressShow(cm), // Display progress.
+							uploadFilesInProgress = true;
+					}
+				}),
+				filepicker.makeDropPane($uploadFiles[0], { // Drag n' drop.
+					multiple  : true, // Allow for multiple files.
+					onSuccess : function(droppedFiles)
+					{
+						uploadTo(cm, droppedFiles), // Handle files.
+							uploadFilesInProgress = false;
+					},
+					onError   : function(type, message)
+					{
+						uploadProgressHide(cm), // Hide progress.
+							uploadFilesInProgress = false;
+					},
+					onProgress: function(percentage)
+					{
+						if(uploadFilesInProgress)
+							return; // Already in progress.
+
+						uploadProgressShow(cm), // Display progress.
+							uploadFilesInProgress = true;
+					}
+				}),
+				$uploadFiles.find('> a').on('click.githubCodeMirror', function(e)
 				{
 					e.preventDefault(),
 						e.stopImmediatePropagation();
-
 					uploadTo(cm); // Perform the upload.
 				});
-			$this.closest('form').on('submit.githubCodemirror', function()
+			if(!getOption('filePickerKey')) // No key, no worky!
+				$uploadFiles.find('.-drag-n-drop').html('');
+
+			$this.closest('form').on('submit.githubCodeMirror', function()
 			{
 				cm.save(); // Let's be sure it's saved!
 
@@ -142,10 +189,24 @@
 					           codeClearInterval = setInterval(codeClearIntervalHandler, 100);
 				           }, 500);
 			});
-			$comment.find('.timeline-comment-action.js-comment-edit-button').on('click.githubCodemirror', function()
+			$comment.find('.timeline-comment-action.js-comment-edit-button').on('click.githubCodeMirror', function()
 			{
 				setTimeout(function() // Sync w/ textarea and refresh editor.
-				           { cm.setValue($(cm.getTextArea()).val()), cm.refresh(); }, 100);
+				           {
+					           cm.setValue($(cm.getTextArea()).val()),
+						           cm.refresh(); // Refresh instance.
+
+					           try // Automatic fullscreen?
+					           {
+						           if(getOption('autoFsEditRegex'))
+							           if(new RegExp(getOption('autoFsEditRegex'), 'i').test(location.href))
+								           toggleFullscreen(cm);
+					           }
+					           catch(exception) // e.g., Invalid regex.
+					           {
+						           console.log(exception);
+					           }
+				           }, 100);
 			});
 			$this.closest('form[action*="/commit_comment/"]').find('.form-actions button[type="submit"]')
 				.each(function() // Enable commit comment submit button; if applicable.
@@ -159,40 +220,107 @@
 					      cm.on('keydown', eventHandler);
 				      });
 			if(/\/issues\/new(?:[\/?&#]|$)/i.test(location.href)) // Support the `.wskby` shortcut in Typinator.
-				$('.sidebar-labels .js-menu-target').off('.githubCodemirror').on('click.githubCodemirror', function(e)
+				$('.sidebar-labels .js-menu-target').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
 				{
 					$('.comment-form-textarea').each(function()
 					                                 {
 						                                 var $this = $(this), // Initialize.
-							                                 cm = $this.data('githubCodemirror');
+							                                 cm = $this.data('githubCodeMirror');
 						                                 if(cm) cm.save(); // Update code mirror.
 					                                 });
 				});
 		};
-		var uploadTo = function(cm)
+		var uploadTo = function(cm, droppedFiles)
 		{
-			var key = getOption('filepickerKey'); // Current option value.
-			if(!key && !(key = prompt('Enter your personal FilePicker.io key:\n' +
-			                          'Please create a personal App at FilePicker.io to obtain a key:' +
-			                          ' See: https://developers.filepicker.io/apps/', '')))
-				return; // No key to work with in this case.
+			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
+				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
+				$uploadFilesProgress = $uploadFiles.find('.-progress'),
+				$uploadFilesInput = $uploadFiles.find('input');
 
-			updateOption('filepickerKey', key), filepicker.setKey(key),
-				filepicker.pickMultiple({}, function(files)
-				{
-					$.each(files, function(i, file)
+			var key = getOption('filePickerKey'); // Current option value.
+			if(!key && !(key = prompt( // Provide FilePicker.io instructions.
+					'Enter your personal FilePicker.io API key:\n' + // See: <https://developers.filepicker.io/apps/>
+					'Please create a personal App at FilePicker.io to obtain a key. See: https://developers.filepicker.io/apps/', ''
+				))) return; // No key to work with in this case.
+
+			if(key !== getOption('filePickerKey'))
+				updateOption('filePickerKey', key);
+
+			filepicker.setKey(key); // Set the current key.
+
+			if(droppedFiles instanceof Array && droppedFiles.length) // Dropped files?
+			{
+				uploadProgressShow(cm), // Display upload progress status.
+					$.each(droppedFiles, function(i, file) // Insert files.
 					{
-						var ext = ''; // Initialize.
-
-						if(file.filename.indexOf('.') !== -1)
-							ext = file.filename.split('.'), // Dots.
-								ext = ext[ext.length - 1].toLowerCase();
-
-						if(/^image\//i.test(file.mimetype))
-							cm.replaceSelection('![](' + file.url + '#.' + ext + ')\n');
-						else cm.replaceSelection(file.url + '#.' + ext + '\n');
+						cmInsertFile(cm, file); // Insert this dropped file.
+						if(i === droppedFiles.length - 1) // Last dropped file?
+							uploadProgressHide(cm); // Complete!
 					});
-				});
+			}
+			else if(getOption('filePickerFancy') === 'true') // Fancy dialog?
+			{
+				filepicker.pickMultiple({}, function(files) // Insert one (or more) files.
+				{ $.each(files, function(i, file){ cmInsertFile(cm, file); }); });
+			}
+			else // In this case we simply open a system default file browser.
+			{
+				$uploadFilesInput.off('.githubCodeMirror').on('change.githubCodeMirror', function()
+				{
+					var files = this.files; // Array of file objects.
+					if(!files.length) // No file objects?
+						return; // Nothing to do here.
+
+					uploadProgressShow(cm), // Display an upload progress status.
+						$.each(files, function(i, file) // Iterate selected file(s).
+						{
+							filepicker.store(file, function(file) // Upload this file.
+							{
+								cmInsertFile(cm, file); // Insert this uploaded file.
+								if(i === files.length - 1) // Last uploaded file?
+									uploadProgressHide(cm); // Complete!
+							});
+						});
+				}), // Click the `<input type="file" />` automatically.
+					$uploadFilesInput.click(); // Opens system file browser now.
+			}
+		};
+		var cmInsertFile = function(cm, file)
+		{
+			var ext = ''; // Initialize.
+
+			if(file.filename.indexOf('.') !== -1)
+				ext = file.filename.split('.'), // Dots.
+					ext = ext[ext.length - 1].toLowerCase();
+
+			if(/^image\//i.test(file.mimetype))
+				cm.replaceSelection('![](' + file.url + '#.' + ext + ')\n');
+			else cm.replaceSelection(file.url + '#.' + ext + '\n');
+		};
+		var uploadProgressShow = function(cm)
+		{
+			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
+				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
+				$uploadFilesProgress = $uploadFiles.find('.-progress'),
+				$uploadFilesInput = $uploadFiles.find('input');
+
+			$uploadFilesDragNDrop.hide(), $uploadFilesProgress.show(),
+				$('.github-codemirror-fs-upload-files').find('> i')
+					.removeClass('octicon-cloud-upload').addClass('octicon-sync');
+		};
+		var uploadProgressHide = function(cm)
+		{
+			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
+				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
+				$uploadFilesProgress = $uploadFiles.find('.-progress'),
+				$uploadFilesInput = $uploadFiles.find('input');
+
+			$uploadFilesProgress.hide(), $uploadFilesDragNDrop.show(), $uploadFilesInput.val(''),
+				$('.github-codemirror-fs-upload-files').find('> i')
+					.removeClass('octicon-sync').addClass('octicon-cloud-upload');
 		};
 		var toPlainText = function(string)
 		{
@@ -238,7 +366,7 @@
 				$timeline = $inDicussion.closest('.discussion-timeline'),
 				$textarea = $timeline.find('.comment-form-textarea').last();
 
-			return $textarea.data('githubCodemirror');
+			return $textarea.data('githubCodeMirror');
 		};
 		var onBodyKeyDown = function(e)
 		{
@@ -281,12 +409,15 @@
 				cm.replaceSelection(reply),
 				cm.execCommand('goDocEnd');
 		};
+		if(getOption('filePickerKey')) // Needed for drag n' drop.
+			filepicker.setKey(getOption('filePickerKey'));
+
 		$('head').append('<style type="text/css">' +
 		                 '   @import url("' + cmThemeURL + '");' +
 		                 '</style>');
 		$('.comment-form-textarea').each(convert), // On an interval also.
 			setInterval(function(){ $('.comment-form-textarea').each(convert); }, 500);
-		$('body').on('keydown.githubCodemirror', onBodyKeyDown).on('keyup.githubCodemirror', onBodyKeyUp);
+		$('body').on('keydown.githubCodeMirror', onBodyKeyDown).on('keyup.githubCodeMirror', onBodyKeyUp);
 	};
 	$(document).ready(onReady); // On DOM ready state.
 })(jQuery);
