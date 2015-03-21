@@ -22,11 +22,6 @@ Fullscreen styles.
 {
 	color : #FFFFFF;
 }
-.github-codemirror-fs-upload-files > i.octicon-sync
-{
-	-webkit-animation : github-codemirror-spin 2s infinite linear;
-	animation         : github-codemirror-spin 2s infinite linear;
-}
 /*
 File upload styles.
 */
@@ -57,10 +52,9 @@ File upload styles.
 	float  : right;
 	margin : 0 0 0 1em;
 }
-.github-codemirror-upload-files > .-progress > .octicon-sync
+.github-codemirror-upload-files > .-progress
 {
-	-webkit-animation : github-codemirror-spin 2s infinite linear;
-	animation         : github-codemirror-spin 2s infinite linear;
+	color : #008803;
 }
 .github-codemirror-upload-files > a
 {
@@ -100,6 +94,11 @@ CodeMirror styles.
 /*
 Animations.
 */
+.fa.fa-spin-fast
+{
+	-webkit-animation : github-codemirror-spin .5s infinite linear;
+	animation         : github-codemirror-spin .5s infinite linear;
+}
 @-webkit-keyframes github-codemirror-spin
 {
 	0%

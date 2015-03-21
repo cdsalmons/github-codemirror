@@ -28,15 +28,15 @@
 
 			fsUploadFiles = // File uploader.
 				'<div class="github-codemirror-fs-upload-files" title="FilePicker.io">' +
-				'  <i class="octicon octicon-cloud-upload"></i>' +
+				'  <i class="fa fa-upload"></i>' +
 				'</div>',
 
 			uploadFiles = // File uploader.
 				'<div class="github-codemirror-upload-files" title="FilePicker.io">' +
 				'  <input type="file" multiple="multiple" />' + // Hidden via CSS.
-				'  <div class="-drag-n-drop">Or drag n\' drop <i class="octicon octicon-cloud-upload"></i></div>' +
-				'  <div class="-progress"><i class="octicon octicon-sync"></i> Uploading...</div>' + // Hidden via CSS.
-				'  <i class="octicon octicon-cloud-upload"></i> <a href="#">Upload Files</a> (of any type) — powered by FilePicker.io' +
+				'  <div class="-drag-n-drop">Or drag n\' drop <i class="fa fa-upload"></i></div>' +
+				'  <div class="-progress"><i class="fa fa-refresh fa-spin-fast"></i> Uploading...</div>' + // Hidden via CSS.
+				'  <i class="fa fa-upload"></i> <a href="#">Upload Files</a> (of any type) — powered by FilePicker.io' +
 				'</div>',
 
 			getOption = function(option, defaultValue)
@@ -105,10 +105,11 @@
 			var $this = $(this), cm, $uploadFiles, uploadFilesInProgress,
 				$comment = $this.closest('.timeline-comment-wrapper');
 
-			if($this.data('githubCodeMirror') || $comment.find('.CodeMirror').length)
+			if($this.data('githubCodeMirror'))
 				return; // Already has a CodeMirror instance.
 
-			cm = CodeMirror.fromTextArea(this, cmOptions),
+			$comment.find('.CodeMirror').remove(),
+				cm = CodeMirror.fromTextArea(this, cmOptions),
 				$this.data('githubCodeMirror', cm); // Reference.
 
 			$comment.find('.comment-form-head .preview-tab').on('click.githubCodeMirror', cm.save);
@@ -118,7 +119,9 @@
 					e.stopImmediatePropagation();
 				toggleFullscreen(cm); // Toggle fullscreen.
 			});
-			$comment.find('.drag-and-drop').replaceWith($uploadFiles = $(uploadFiles)),
+			$comment.find('.drag-and-drop').replaceWith($(uploadFiles)),
+				($uploadFiles = $comment.find('.github-codemirror-upload-files')),
+
 				filepicker.makeDropPane($comment.find('.CodeMirror')[0], { // Drag n' drop.
 					multiple  : true, // Allow for multiple files.
 					onSuccess : function(droppedFiles)
@@ -308,7 +311,7 @@
 
 			$uploadFilesDragNDrop.hide(), $uploadFilesProgress.show(),
 				$('.github-codemirror-fs-upload-files').find('> i')
-					.removeClass('octicon-cloud-upload').addClass('octicon-sync');
+					.removeClass('fa-upload').addClass('fa-refresh fa-spin-fast');
 		};
 		var uploadProgressHide = function(cm)
 		{
@@ -320,7 +323,7 @@
 
 			$uploadFilesProgress.hide(), $uploadFilesDragNDrop.show(), $uploadFilesInput.val(''),
 				$('.github-codemirror-fs-upload-files').find('> i')
-					.removeClass('octicon-sync').addClass('octicon-cloud-upload');
+					.removeClass('fa-refresh fa-spin-fast').addClass('fa-upload');
 		};
 		var toPlainText = function(string)
 		{

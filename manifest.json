@@ -33,6 +33,7 @@
 				"scripts/codemirror/addon/search/matchesonscrollbar.css",
 				"scripts/codemirror/addon/display/fullscreen.css",
 
+				"styles/font-awesome/css/font-awesome.css",
 				"styles/github.css"
 			],
 			"js"     : [
