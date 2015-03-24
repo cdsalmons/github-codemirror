@@ -102,27 +102,30 @@
 
 		var convert = function() // Textarea.
 		{
-			var $this = $(this), cm, $uploadFiles, uploadFilesInProgress,
-				$comment = $this.closest('.timeline-comment-wrapper');
+			var $this = $(this), cm, $codeMirror, $uploadFiles, uploadFilesInProgress,
+				$comment = $this.closest('.timeline-comment-wrapper, .inline-comment-form-container');
 
-			if($this.data('githubCodeMirror'))
+			if($this.data('githubCodeMirror')) // Has a CodeMirror?
 				return; // Already has a CodeMirror instance.
 
-			$comment.find('.CodeMirror').remove(),
-				cm = CodeMirror.fromTextArea(this, cmOptions),
+			$comment.addClass('github-codemirror-comment'); // Standardize this.
+
+			$comment.find('.CodeMirror').remove(), // In case of back button or cache.
+				cm = CodeMirror.fromTextArea(this, cmOptions), // Create CodeMirror.
+				$codeMirror = $comment.find('.CodeMirror'), // The CodeMirror.
 				$this.data('githubCodeMirror', cm); // Reference.
 
-			$comment.find('.comment-form-head .preview-tab').on('click.githubCodeMirror', cm.save);
-			$comment.find('.comment-form-head .enable-fullscreen').on('click.githubCodeMirror', function(e)
+			$comment.find('.comment-form-head .preview-tab').off('.githubCodeMirror').on('click.githubCodeMirror', cm.save);
+			$comment.find('.comment-form-head .enable-fullscreen').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
 			{
 				e.preventDefault(),
 					e.stopImmediatePropagation();
 				toggleFullscreen(cm); // Toggle fullscreen.
 			});
-			$comment.find('.drag-and-drop').replaceWith($(uploadFiles)),
+			$comment.find('.drag-and-drop, .github-codemirror-upload-files').replaceWith($(uploadFiles)),
 				($uploadFiles = $comment.find('.github-codemirror-upload-files')),
 
-				filepicker.makeDropPane($comment.find('.CodeMirror')[0], { // Drag n' drop.
+				filepicker.makeDropPane($codeMirror[0], { // Drag n' drop.
 					multiple  : true, // Allow for multiple files.
 					onSuccess : function(droppedFiles)
 					{
@@ -164,7 +167,7 @@
 							uploadFilesInProgress = true;
 					}
 				}),
-				$uploadFiles.find('> a').on('click.githubCodeMirror', function(e)
+				$uploadFiles.find('> a').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
 				{
 					e.preventDefault(),
 						e.stopImmediatePropagation();
@@ -173,7 +176,7 @@
 			if(!getOption('filePickerKey')) // No key, no worky!
 				$uploadFiles.find('.-drag-n-drop').html('');
 
-			$this.closest('form').on('submit.githubCodeMirror', function()
+			$this.closest('form').off('.githubCodeMirror').on('submit.githubCodeMirror', function()
 			{
 				cm.save(); // Let's be sure it's saved!
 
@@ -192,7 +195,7 @@
 					           codeClearInterval = setInterval(codeClearIntervalHandler, 100);
 				           }, 500);
 			});
-			$comment.find('.timeline-comment-action.js-comment-edit-button').on('click.githubCodeMirror', function()
+			$comment.find('.js-comment-edit-button').off('.githubCodeMirror').on('click.githubCodeMirror', function()
 			{
 				setTimeout(function() // Sync w/ textarea and refresh editor.
 				           {
@@ -209,33 +212,32 @@
 					           {
 						           console.log(exception);
 					           }
-				           }, 100);
+				           }, 100); // After delay; i.e., allow GitHub to fill textarea.
 			});
-			$this.closest('form[action*="/commit_comment/"]').find('.form-actions button[type="submit"]')
-				.each(function() // Enable commit comment submit button; if applicable.
-				      {
-					      var $this = $(this),
-						      eventHandler = function()
-						      {
-							      $this.removeAttr('disabled'),
-								      cm.off('keydown', eventHandler);
-						      };
-					      cm.on('keydown', eventHandler);
-				      });
+			cm.off('keydown', enableSubmits), cm.on('keydown', enableSubmits); // Enable submit button(s) on data entry.
+
 			if(/\/issues\/new(?:[\/?&#]|$)/i.test(location.href)) // Support the `.wskby` shortcut in Typinator.
 				$('.sidebar-labels .js-menu-target').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
 				{
-					$('.comment-form-textarea').each(function()
-					                                 {
-						                                 var $this = $(this), // Initialize.
-							                                 cm = $this.data('githubCodeMirror');
-						                                 if(cm) cm.save(); // Update code mirror.
-					                                 });
+					$('.github-codemirror-comment .comment-form-textarea')
+						.each(function() // Save to textarea.
+						      {
+							      var $this = $(this), // Initialize.
+								      cm = $this.data('githubCodeMirror');
+							      if(cm) cm.save(); // Update code mirror.
+						      });
 				});
+		};
+		var enableSubmits = function(cm)
+		{
+			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
+				$submit = $comment.find('.form-actions button[type="submit"]');
+
+			$submit.removeAttr('disabled'), cm.off('keydown', enableSubmits);
 		};
 		var uploadTo = function(cm, droppedFiles)
 		{
-			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
 				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
 				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
 				$uploadFilesProgress = $uploadFiles.find('.-progress'),
@@ -303,7 +305,7 @@
 		};
 		var uploadProgressShow = function(cm)
 		{
-			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
 				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
 				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
 				$uploadFilesProgress = $uploadFiles.find('.-progress'),
@@ -315,7 +317,7 @@
 		};
 		var uploadProgressHide = function(cm)
 		{
-			var $comment = $(cm.getTextArea()).closest('.timeline-comment-wrapper'),
+			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
 				$uploadFiles = $comment.find('.github-codemirror-upload-files'),
 				$uploadFilesDragNDrop = $uploadFiles.find('.-drag-n-drop'),
 				$uploadFilesProgress = $uploadFiles.find('.-progress'),
@@ -357,8 +359,8 @@
 		var getWinSelectionAuthor = function()
 		{
 			var $winSelectionParent = $(getWinSelectionParent()),
-				$comment = $winSelectionParent.closest('.timeline-comment-wrapper'),
-				$commentAuthor = $comment.find('.timeline-comment-header .author'),
+				$comment = $winSelectionParent.closest('.github-codemirror-comment'),
+				$commentAuthor = $comment.find('.author'),
 				author = $.trim($commentAuthor.text());
 
 			return author ? author : ''; // Default empty string.

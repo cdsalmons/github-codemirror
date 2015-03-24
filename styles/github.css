@@ -36,8 +36,8 @@ File upload styles.
 	color                      : #AAAAAA;
 	background-color           : #FAFAFA;
 	border                     : 1px solid #CCCCCC;
+	border-top                 : 1px dashed #DDDDDD;
 
-	border-top                 : 0;
 	border-bottom-right-radius : 3px;
 	border-bottom-left-radius  : 3px;
 }
