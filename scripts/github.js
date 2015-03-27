@@ -122,7 +122,7 @@
 					e.stopImmediatePropagation();
 				toggleFullscreen(cm); // Toggle fullscreen.
 			});
-			$comment.find('.drag-and-drop, .github-codemirror-upload-files').replaceWith($(uploadFiles)),
+			$comment.find('.drag-and-drop, .github-codemirror-upload-files').remove(), $codeMirror.after($(uploadFiles)),
 				($uploadFiles = $comment.find('.github-codemirror-upload-files')),
 
 				filepicker.makeDropPane($codeMirror[0], { // Drag n' drop.

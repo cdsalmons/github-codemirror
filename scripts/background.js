@@ -22,6 +22,6 @@ chrome.webRequest.onHeadersReceived.addListener(
 		return {responseHeaders: details.responseHeaders};
 	}, {
 		types: ['main_frame'],
-		urls : ['*://github.com/*']
+		urls : ['*://*.github.com/*']
 	}, ['blocking', 'responseHeaders']
 );
