@@ -103,7 +103,7 @@
 		var convert = function() // Textarea.
 		{
 			var $this = $(this), cm, $codeMirror, $uploadFiles, uploadFilesInProgress,
-				$comment = $this.closest('.timeline-comment-wrapper, .inline-comment-form-container');
+				$comment = $this.closest('.timeline-comment-wrapper, .timeline-comment.inline-comment, .inline-comment-form-container');
 
 			if($this.data('githubCodeMirror')) // Has a CodeMirror?
 				return; // Already has a CodeMirror instance.
@@ -115,13 +115,13 @@
 				$codeMirror = $comment.find('.CodeMirror'), // The CodeMirror.
 				$this.data('githubCodeMirror', cm); // Reference.
 
-			$comment.find('.comment-form-head .preview-tab').off('.githubCodeMirror').on('click.githubCodeMirror', cm.save);
-			$comment.find('.comment-form-head .enable-fullscreen').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
-			{
-				e.preventDefault(),
-					e.stopImmediatePropagation();
-				toggleFullscreen(cm); // Toggle fullscreen.
-			});
+			$comment.find('.comment-form-head .preview-tab').off('.githubCodeMirror').on('click.githubCodeMirror', cm.save),
+				$comment.find('.comment-form-head .enable-fullscreen').off('.githubCodeMirror').on('click.githubCodeMirror', function(e)
+				{
+					e.preventDefault(),
+						e.stopImmediatePropagation();
+					toggleFullscreen(cm); // Toggle fullscreen.
+				});
 			$comment.find('.drag-and-drop, .github-codemirror-upload-files').remove(), $codeMirror.after($(uploadFiles)),
 				($uploadFiles = $comment.find('.github-codemirror-upload-files')),
 
@@ -233,7 +233,8 @@
 			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
 				$submit = $comment.find('.form-actions button[type="submit"]');
 
-			$submit.removeAttr('disabled'), cm.off('keydown', enableSubmits);
+			$submit.removeAttr('disabled'), cm.off('keydown', enableSubmits),
+				$submit.on('click.githubCodeMirror', cm.save);
 		};
 		var uploadTo = function(cm, droppedFiles)
 		{

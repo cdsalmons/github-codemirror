@@ -1,7 +1,7 @@
 {
 	"manifest_version"        : 2,
 
-	"version"                 : "15.3.21",
+	"version"                 : "15.3.28",
 	"name"                    : "GitHub CodeMirror",
 	"description"             : "GitHub + CodeMirror",
 	"icons"                   : {
