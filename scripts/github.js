@@ -233,7 +233,7 @@
 			var $comment = $(cm.getTextArea()).closest('.github-codemirror-comment'),
 				$submit = $comment.find('.form-actions button[type="submit"]');
 
-			$submit.removeAttr('disabled'), cm.off('keydown', enableSubmits),
+			cm.off('keydown', enableSubmits), $submit.removeAttr('disabled'),
 				$submit.on('click.githubCodeMirror', cm.save);
 		};
 		var uploadTo = function(cm, droppedFiles)
