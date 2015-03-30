@@ -15,6 +15,7 @@ This replaces the default GitHub Issue textarea with a [CodeMirror running in GF
 - Supports a true fullscreen editing mode. Use `F11` to toggle or click the fullscreen link.
 - Adds the ability to upload files of _any_ type (not just images). This is powered by FilePicker.io. Also works in fullscreen mode.
    **Note:** When you click the file upload link for the first time, you will be asked for your [FilePicker.io](https://www.filepicker.io/) key. Please visit [FilePicker.io](https://www.filepicker.io/), signup, and create an App to acquire your key. You only need to enter this one time.
+- Support for New Issues, Issue Comments, Inline Commit Comments, Pull Requests, Inline PR Comments, and Gist Comments.
 
 <img src="images/ss.png" align="center" />
 

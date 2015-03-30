@@ -17,7 +17,6 @@ npm-debug.log
 
 # IntelliJ
 .idea/
-*.iml
 *.ipr
 *.iws
 
@@ -55,6 +54,9 @@ Icon?
 
 # Amazon Web Services
 .elasticbeanstalk/
+
+# Vagrant
+.vagrant/
 
 # For shell glob patterns. This includes Git files too. We simply maintain this list together with `.gitignore`.
 # .~*;*~;*.bak;.idea;*.iml;*.ipr;*.iws;*.sublime-workspace;*.sublime-project;.git;.gitignore;.gitattributes;CVS;.cvsignore;.svn;_svn;.bzr;.bzrignore;.hg;.hgignore;SCCS;RCS;$RECYCLE.BIN;Desktop.ini;Thumbs.db;ehthumbs.db;.Spotlight-V100;.AppleDouble;.LSOverride;.DS_Store;.Trashes;.elasticbeanstalk

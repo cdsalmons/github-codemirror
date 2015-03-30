@@ -22,6 +22,7 @@
 # Server config files.
 *.admins text
 *.cfg text
+*.cnf text
 *.conf text
 *.htaccess text
 *.htaccess-apache text
